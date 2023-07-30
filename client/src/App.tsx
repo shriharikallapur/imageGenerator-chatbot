@@ -4,8 +4,7 @@ import axios from "axios";
 
 type Message = {
   content: string;
-  url: string;
-  role: "user" | "assistant";
+  role: string;
 };
 
 function ChatMessage(props: { message: Message }) {
@@ -41,16 +40,17 @@ function ChatMessage(props: { message: Message }) {
 export const App = () => {
 
   const [prompt, setPrompt] = useState<string>("");
-  const [response, setResponse] = useState<string>("");
   const [history, setHistory] = useState<Message[]>([]);
-  const [botState, setBotState] = useState<object>({});
+  const [botState, setBotState] = useState<string>("");
 
   const chatRequest = (history: Message[]) => {
     axios 
       .post("http://localhost:8080/imageGenerator", { prompt })
       .then((res) => {
-        const msg = {content: res.data, role: "assistant"};
+        const content:string = res.data
+        const msg = {content: content, role: "assistant"};
         setHistory([...history, msg]);
+        setBotState(botState)
       }).catch((err) => {
         console.log(err);
       })
@@ -82,12 +82,11 @@ export const App = () => {
                       if (e.key === "Enter") {
                         const newMessage: Message = {
                           content: prompt,
-                          url: response,
                           role: "user",
                         };
                         setHistory([...history, newMessage]);
                         setPrompt("");
-                        chatRequest([...history, newMessage], botState);
+                        chatRequest([...history, newMessage]);
                       }
                     }}
                   />
@@ -99,12 +98,11 @@ export const App = () => {
                   onClick={() => {
                     const newMessage: Message = {
                       content: prompt,
-                      url: response,
                       role: "user",
                     };
                     setHistory([...history, newMessage]);
                     setPrompt("");
-                    chatRequest([...history, newMessage], botState);
+                    chatRequest([...history, newMessage]);
                   }
                 }
                 >
