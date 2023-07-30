@@ -24,7 +24,6 @@ app.post("/imageGenerator", async (req, res) => {
   res.send(response.data.data[0].url);
 });
 
-const port = 8080;
-app.listen(port, () => {
-  console.log(`server is listening on this port ${port}`);
+app.listen(process.env.PORT, () => {
+  console.log(`server is listening on this port ${process.env.PORT}`);
 })
